@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
@@ -30,27 +31,24 @@ public class Session {
 
     /**
      * Are we up to date?
+     *
      * @param resourceId
      */
     public static void isUpToDate(String resourceId) {
         try {
             HttpURLConnection con = (HttpURLConnection) new URL(
-                    "https://www.spigotmc.org/api/general.php").openConnection();
+                "https://www.spigotmc.org/api/general.php").openConnection();
             con.setDoOutput(true);
             con.setRequestMethod("POST");
             con.getOutputStream()
-                    .write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=" + resourceId)
-                            .getBytes("UTF-8"));
+                .write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=" + resourceId)
+                    .getBytes(StandardCharsets.UTF_8));
             String version = new BufferedReader(new InputStreamReader(
-                    con.getInputStream())).readLine();
-            if (version.equalsIgnoreCase(plugin.getDescription().getVersion())) {
-                isuptodate =  true;
-            } else {
-                isuptodate =  false;
-            }
+                con.getInputStream())).readLine();
+            isuptodate = version.equalsIgnoreCase(plugin.getDescription().getVersion());
         } catch (Exception ex) {
             ex.printStackTrace();
-            isuptodate =  false;
+            isuptodate = false;
         }
     }
 

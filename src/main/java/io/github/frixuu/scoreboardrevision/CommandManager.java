@@ -2,7 +2,6 @@ package io.github.frixuu.scoreboardrevision;
 
 import io.github.frixuu.scoreboardrevision.util.ConfigControl;
 import io.github.frixuu.scoreboardrevision.util.Func;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,28 +14,25 @@ public class CommandManager implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
 
-        if(!(commandSender instanceof Player))
-        {
+        if (!(commandSender instanceof Player)) {
             commandSender.sendMessage("This is a player-only command!");
         } else {
 
             Player player = (Player) commandSender;
 
-            if(args.length < 1)
-            {
+            if (args.length < 1) {
                 Func.msg(player, "Too few arguments!");
                 help(player);
             } else {
-                 if(args[0].equalsIgnoreCase("reload")) {
-                    if(Func.perm(player, "reload"))
-                    {
+                if (args[0].equalsIgnoreCase("reload")) {
+                    if (Func.perm(player, "reload")) {
                         Main.disolveBoards();
                         ConfigControl.get().reloadConfigs();
                         Main.loadBoards();
                         Func.smsg(player, "Scoreboard reloaded");
                     }
-                }  else {
-                    Func.msg(player,"Unknown command!");
+                } else {
+                    Func.msg(player, "Unknown command!");
                     help(player);
                 }
             }
@@ -45,8 +41,7 @@ public class CommandManager implements CommandExecutor {
         return false;
     }
 
-    private void help(Player player)
-    {
+    private void help(Player player) {
         Func.smsg(player, "/sb reload (Reload config and application)");
     }
 }
