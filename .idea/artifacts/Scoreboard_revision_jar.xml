@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="Scoreboard-revision:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/Scoreboard_revision_jar</output-path>
-    <root id="archive" name="Scoreboard-revision.jar">
-      <element id="module-output" name="Scoreboard-revision" />
-    </root>
-  </artifact>
-</component>
