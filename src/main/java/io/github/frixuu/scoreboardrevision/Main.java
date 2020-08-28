@@ -85,8 +85,6 @@ public class Main extends JavaPlugin {
         setupCommands();
         loadBoards();
 
-        new Metrics(this);
-
         new WorldManager().runTaskTimer(this, 20L, 40L);
 
         finished();
