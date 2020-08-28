@@ -1,15 +1,12 @@
-package rien.bijl.Scoreboard.r;
+package io.github.frixuu.scoreboardrevision;
 
+import io.github.frixuu.scoreboardrevision.util.ConfigControl;
+import io.github.frixuu.scoreboardrevision.util.Func;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import rien.bijl.Scoreboard.r.board.App;
-import rien.bijl.Scoreboard.r.board.Row;
-import rien.bijl.Scoreboard.r.board.ScoreboardHolder;
-import rien.bijl.Scoreboard.r.util.ConfigControl;
-import rien.bijl.Scoreboard.r.util.Func;
 
 /**
  * Created by Rien on 23-10-2018.

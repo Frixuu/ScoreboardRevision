@@ -1,12 +1,12 @@
-package rien.bijl.Scoreboard.r.board.events;
+package io.github.frixuu.scoreboardrevision.board.events;
 
+import io.github.frixuu.scoreboardrevision.Session;
+import io.github.frixuu.scoreboardrevision.util.Func;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import rien.bijl.Scoreboard.r.Session;
-import rien.bijl.Scoreboard.r.board.App;
-import rien.bijl.Scoreboard.r.board.ScoreboardHolder;
-import rien.bijl.Scoreboard.r.util.Func;
+import io.github.frixuu.scoreboardrevision.board.App;
+import io.github.frixuu.scoreboardrevision.board.ScoreboardHolder;
 
 /**
  * Created by Rien on 22-10-2018.

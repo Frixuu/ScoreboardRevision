@@ -1,10 +1,9 @@
-package rien.bijl.Scoreboard.r.util;
+package io.github.frixuu.scoreboardrevision.util;
 
 
+import io.github.frixuu.scoreboardrevision.Session;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import rien.bijl.Scoreboard.r.Main;
-import rien.bijl.Scoreboard.r.Session;
 
 import java.io.*;
 import java.util.HashMap;

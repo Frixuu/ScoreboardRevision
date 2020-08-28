@@ -1,10 +1,10 @@
-package rien.bijl.Scoreboard.r.board;
+package io.github.frixuu.scoreboardrevision.board;
 
+import io.github.frixuu.scoreboardrevision.Session;
+import io.github.frixuu.scoreboardrevision.util.ConfigControl;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import rien.bijl.Scoreboard.r.Session;
-import rien.bijl.Scoreboard.r.util.ConfigControl;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,12 +1,12 @@
-package rien.bijl.Scoreboard.r.triggers;
+package io.github.frixuu.scoreboardrevision.triggers;
 
+import io.github.frixuu.scoreboardrevision.Main;
+import io.github.frixuu.scoreboardrevision.board.App;
+import io.github.frixuu.scoreboardrevision.board.ScoreboardHolder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import rien.bijl.Scoreboard.r.Main;
-import rien.bijl.Scoreboard.r.board.App;
-import rien.bijl.Scoreboard.r.board.ScoreboardHolder;
 
 /**
  * Created by Rien on 24-10-2018.

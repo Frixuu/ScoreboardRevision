@@ -1,14 +1,13 @@
-package rien.bijl.Scoreboard.r.board.slimboard;
+package io.github.frixuu.scoreboardrevision.board.slimboard;
 
+import io.github.frixuu.scoreboardrevision.Session;
+import io.github.frixuu.scoreboardrevision.board.App;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.*;
-import rien.bijl.Scoreboard.r.Main;
-import rien.bijl.Scoreboard.r.Session;
-import rien.bijl.Scoreboard.r.board.App;
 
 import java.util.ArrayList;
 import java.util.HashMap;

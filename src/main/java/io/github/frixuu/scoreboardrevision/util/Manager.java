@@ -1,4 +1,4 @@
-package rien.bijl.Scoreboard.r.util;
+package io.github.frixuu.scoreboardrevision.util;
 
 import org.bukkit.entity.Player;
 

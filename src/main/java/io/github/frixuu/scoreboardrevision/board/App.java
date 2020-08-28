@@ -1,13 +1,12 @@
-package rien.bijl.Scoreboard.r.board;
+package io.github.frixuu.scoreboardrevision.board;
 
+import io.github.frixuu.scoreboardrevision.Session;
+import io.github.frixuu.scoreboardrevision.board.events.EDeintergrate;
+import io.github.frixuu.scoreboardrevision.board.events.EIntergrate;
+import io.github.frixuu.scoreboardrevision.util.ConfigControl;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import rien.bijl.Scoreboard.r.Main;
-import rien.bijl.Scoreboard.r.Session;
-import rien.bijl.Scoreboard.r.board.events.EDeintergrate;
-import rien.bijl.Scoreboard.r.board.events.EIntergrate;
-import rien.bijl.Scoreboard.r.util.ConfigControl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,7 @@ public class App extends BukkitRunnable {
         }
 
         // Register already joined players
-        if(board == "board") for(Player player : Session.plugin.getServer().getOnlinePlayers()) new ScoreboardHolder(this, player);
+        if(board.equals("board")) for(Player player : Session.plugin.getServer().getOnlinePlayers()) new ScoreboardHolder(this, player);
 
     }
 

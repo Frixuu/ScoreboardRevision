@@ -1,9 +1,0 @@
-name: Scoreboard-revision
-author: HelloitsRien
-version: R3 1.4.2 RELEASE
-main: rien.bijl.Scoreboard.r.Main
-description: Lightweight nonflickering scoreboard revision
-softdepend: [PlaceholderAPI]
-commands:
-  sb:
-    description: Scoreboard main command

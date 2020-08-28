@@ -1,12 +1,11 @@
-package rien.bijl.Scoreboard.r;
+package io.github.frixuu.scoreboardrevision;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import io.github.frixuu.scoreboardrevision.board.App;
+import io.github.frixuu.scoreboardrevision.board.WorldManager;
+import io.github.frixuu.scoreboardrevision.util.ConfigControl;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
-import rien.bijl.Scoreboard.r.board.App;
-import rien.bijl.Scoreboard.r.board.WorldManager;
-import rien.bijl.Scoreboard.r.util.ConfigControl;
 
 import java.util.HashMap;
 

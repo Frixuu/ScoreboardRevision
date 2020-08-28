@@ -1,0 +1,11 @@
+name: Scoreboard-revision
+authors:
+  - HelloitsRien
+  - Frixuu
+version: 1.5.0-SNAPSHOT
+main: io.github.frixuu.scoreboardrevision.Main
+description: Lightweight, nonflickering scoreboard revision
+softdepend: [PlaceholderAPI]
+commands:
+  sb:
+    description: Scoreboard main command
