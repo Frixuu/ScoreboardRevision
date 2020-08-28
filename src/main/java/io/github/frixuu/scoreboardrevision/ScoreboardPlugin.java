@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * Created by Rien on 21-10-2018.
@@ -57,16 +58,6 @@ public class ScoreboardPlugin extends JavaPlugin {
         boardRunnable.isdefault = isdefault;
     }
 
-    /**
-     * Log to the console that we're done
-     */
-    public static void finished() {
-        System.out.println("Scoreboard is online! Scoreboard version: " + Session.plugin.getDescription().getVersion() +
-            " (" + (Session.isuptodate ? "UP TO DATE" : "OUTDATED") + ")");
-
-        System.out.println();
-    }
-
     @Override
     public void onEnable() {
         init();
@@ -77,17 +68,16 @@ public class ScoreboardPlugin extends JavaPlugin {
      */
     private void init() {
         Session.plugin = this;
-        Session.isUpToDate("14754");
         ConfigControl.get().createDataFiles();
         empty = getServer().getScoreboardManager().getNewScoreboard();
 
         autoloadDependencies();
-        setupCommands();
+        registerCommands();
         loadBoards();
 
         new WorldManager().runTaskTimer(this, 20L, 40L);
 
-        finished();
+        getLogger().info("Hey, we're online! ScoreboardRevision is now running.");
     }
 
     /**
@@ -102,8 +92,8 @@ public class ScoreboardPlugin extends JavaPlugin {
     /**
      * Create the commands
      */
-    private void setupCommands() {
-        getCommand("sb").setExecutor(new CommandManager());
+    private void registerCommands() {
+        Objects.requireNonNull(getCommand("sb")).setExecutor(new CommandManager());
     }
 
 }

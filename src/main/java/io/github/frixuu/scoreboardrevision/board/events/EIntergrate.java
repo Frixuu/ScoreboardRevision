@@ -21,11 +21,8 @@ public class EIntergrate implements Listener {
 
     @EventHandler
     public void Intergrate(PlayerJoinEvent e) {
-
-        if (boardRunnable == null || !boardRunnable.isdefault) return;
-        if (e.getPlayer().isOp() && !Session.isuptodate)
-            e.getPlayer().sendMessage(ChatUtils.color("&cYou are running an outdated version of Scoreboard, please update as soon as possible for performance gain, security- or bugfixes."));
-        new ScoreboardHolder(boardRunnable, e.getPlayer());
+        if (boardRunnable != null && boardRunnable.isdefault) {
+            new ScoreboardHolder(boardRunnable, e.getPlayer());
+        }
     }
-
 }
