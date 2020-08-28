@@ -3,7 +3,7 @@ package io.github.frixuu.scoreboardrevision.board;
 import io.github.frixuu.scoreboardrevision.Session;
 import io.github.frixuu.scoreboardrevision.board.events.EDeintergrate;
 import io.github.frixuu.scoreboardrevision.board.events.EIntergrate;
-import io.github.frixuu.scoreboardrevision.util.ConfigControl;
+import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;

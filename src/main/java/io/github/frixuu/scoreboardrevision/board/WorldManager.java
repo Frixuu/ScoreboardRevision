@@ -1,7 +1,7 @@
 package io.github.frixuu.scoreboardrevision.board;
 
 import io.github.frixuu.scoreboardrevision.Session;
-import io.github.frixuu.scoreboardrevision.util.ConfigControl;
+import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;

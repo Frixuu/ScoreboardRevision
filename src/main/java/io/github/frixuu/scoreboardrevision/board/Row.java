@@ -1,6 +1,6 @@
 package io.github.frixuu.scoreboardrevision.board;
 
-import io.github.frixuu.scoreboardrevision.util.Func;
+import io.github.frixuu.scoreboardrevision.utils.ChatUtils;
 
 import java.util.ArrayList;
 
@@ -38,10 +38,10 @@ public class Row {
             if (lines.size() < 1)
                 line = "";
             else
-                line = Func.color(lines.get(0));
+                line = ChatUtils.color(lines.get(0));
 
 
-        line = Func.color(lines.get(0));
+        line = ChatUtils.color(lines.get(0));
     }
 
     /**
@@ -55,7 +55,7 @@ public class Row {
             current++;
             if (current >= lines.size())
                 current = 0;
-            line = Func.color(lines.get(current));
+            line = ChatUtils.color(lines.get(current));
         } else {
             count++;
         }

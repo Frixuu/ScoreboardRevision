@@ -2,7 +2,7 @@ package io.github.frixuu.scoreboardrevision;
 
 import io.github.frixuu.scoreboardrevision.board.App;
 import io.github.frixuu.scoreboardrevision.board.WorldManager;
-import io.github.frixuu.scoreboardrevision.util.ConfigControl;
+import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;

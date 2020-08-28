@@ -1,4 +1,4 @@
-package io.github.frixuu.scoreboardrevision.util;
+package io.github.frixuu.scoreboardrevision.utils;
 
 
 import io.github.frixuu.scoreboardrevision.Session;

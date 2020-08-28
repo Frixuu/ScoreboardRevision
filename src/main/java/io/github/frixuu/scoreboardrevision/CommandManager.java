@@ -1,11 +1,13 @@
 package io.github.frixuu.scoreboardrevision;
 
-import io.github.frixuu.scoreboardrevision.util.ConfigControl;
-import io.github.frixuu.scoreboardrevision.util.Func;
+import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
+import io.github.frixuu.scoreboardrevision.utils.ChatUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import static io.github.frixuu.scoreboardrevision.utils.ChatUtils.sendShortPrefixedMessage;
 
 /**
  * Created by Rien on 23-10-2018.
@@ -21,18 +23,20 @@ public class CommandManager implements CommandExecutor {
             Player player = (Player) commandSender;
 
             if (args.length < 1) {
-                Func.msg(player, "Too few arguments!");
+                ChatUtils.sendPrefixedMessage(player, "Too few arguments!");
                 help(player);
             } else {
                 if (args[0].equalsIgnoreCase("reload")) {
-                    if (Func.perm(player, "reload")) {
+                    if (player.hasPermission("scoreboard.reload")) {
                         Main.disolveBoards();
                         ConfigControl.get().reloadConfigs();
                         Main.loadBoards();
-                        Func.smsg(player, "Scoreboard reloaded");
+                        sendShortPrefixedMessage(player, "Scoreboard reloaded");
+                    } else {
+                        sendShortPrefixedMessage(player, "You lack the permission &cscoreboard.reload");
                     }
                 } else {
-                    Func.msg(player, "Unknown command!");
+                    ChatUtils.sendPrefixedMessage(player, "Unknown command!");
                     help(player);
                 }
             }
@@ -42,6 +46,6 @@ public class CommandManager implements CommandExecutor {
     }
 
     private void help(Player player) {
-        Func.smsg(player, "/sb reload (Reload config and application)");
+        sendShortPrefixedMessage(player, "/sb reload (Reload config and application)");
     }
 }
