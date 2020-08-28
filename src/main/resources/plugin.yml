@@ -3,7 +3,7 @@ authors:
   - HelloitsRien
   - Frixuu
 version: 1.5.0-SNAPSHOT
-main: io.github.frixuu.scoreboardrevision.Main
+main: io.github.frixuu.scoreboardrevision.ScoreboardPlugin
 description: Lightweight, nonflickering scoreboard revision
 softdepend: [PlaceholderAPI]
 commands:

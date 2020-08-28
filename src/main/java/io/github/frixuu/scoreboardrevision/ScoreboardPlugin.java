@@ -1,6 +1,6 @@
 package io.github.frixuu.scoreboardrevision;
 
-import io.github.frixuu.scoreboardrevision.board.App;
+import io.github.frixuu.scoreboardrevision.board.BoardRunnable;
 import io.github.frixuu.scoreboardrevision.board.WorldManager;
 import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
 import org.bukkit.Bukkit;
@@ -12,11 +12,11 @@ import java.util.HashMap;
 /**
  * Created by Rien on 21-10-2018.
  */
-public class Main extends JavaPlugin {
+public class ScoreboardPlugin extends JavaPlugin {
 
     public static Scoreboard empty;
 
-    public static HashMap<String, App> apps = new HashMap<>();
+    public static HashMap<String, BoardRunnable> apps = new HashMap<>();
 
     /**
      * Load in all board drivers
@@ -36,8 +36,8 @@ public class Main extends JavaPlugin {
      * Unload all board drivers
      */
     public static void disolveBoards() {
-        for (App app : apps.values())
-            app.cancel();
+        for (BoardRunnable boardRunnable : apps.values())
+            boardRunnable.cancel();
         apps.clear();
     }
 
@@ -48,13 +48,13 @@ public class Main extends JavaPlugin {
      * @param isdefault
      */
     public static void newApp(String board, boolean isdefault) {
-        App app = new App(board);
+        BoardRunnable boardRunnable = new BoardRunnable(board);
         if (ConfigControl.get().gc("settings").getBoolean("settings.safe-mode"))
-            app.runTaskTimer(Session.plugin, 1L, 1L);
-        else app.runTaskTimerAsynchronously(Session.plugin, 1L, 1L);
-        apps.put(board, app);
+            boardRunnable.runTaskTimer(Session.plugin, 1L, 1L);
+        else boardRunnable.runTaskTimerAsynchronously(Session.plugin, 1L, 1L);
+        apps.put(board, boardRunnable);
         Session.plugin.getLogger().info("Loaded app handler for board: " + board);
-        app.isdefault = isdefault;
+        boardRunnable.isdefault = isdefault;
     }
 
     /**

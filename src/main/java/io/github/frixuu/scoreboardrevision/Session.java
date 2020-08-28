@@ -20,7 +20,7 @@ public class Session {
     public static ArrayList<String> enabled_dependencies = new ArrayList<>();
 
     // Objects
-    public static Main plugin = null;
+    public static ScoreboardPlugin plugin = null;
 
     // Bools
     public static boolean isuptodate = false;

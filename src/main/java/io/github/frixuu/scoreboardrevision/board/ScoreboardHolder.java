@@ -1,6 +1,6 @@
 package io.github.frixuu.scoreboardrevision.board;
 
-import io.github.frixuu.scoreboardrevision.Main;
+import io.github.frixuu.scoreboardrevision.ScoreboardPlugin;
 import io.github.frixuu.scoreboardrevision.Session;
 import io.github.frixuu.scoreboardrevision.board.slimboard.Slimboard;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -13,7 +13,7 @@ import java.util.HashMap;
  */
 public class ScoreboardHolder {
 
-    private final App app;
+    private final BoardRunnable boardRunnable;
     private final Slimboard slim;
     public Player player;
     private boolean disabled = false;
@@ -21,16 +21,16 @@ public class ScoreboardHolder {
     /**
      * Construct a new holder
      *
-     * @param app
+     * @param boardRunnable
      * @param player
      */
-    public ScoreboardHolder(App app, Player player) {
-        this.app = app;
+    public ScoreboardHolder(BoardRunnable boardRunnable, Player player) {
+        this.boardRunnable = boardRunnable;
         this.player = player;
 
-        slim = new Slimboard(Session.plugin, player, app.getRows().size());
+        slim = new Slimboard(Session.plugin, player, boardRunnable.getRows().size());
 
-        app.registerHolder(this);
+        boardRunnable.registerHolder(this);
     }
 
     /**
@@ -40,7 +40,7 @@ public class ScoreboardHolder {
 
         if (Session.disabled_players.contains(this.player)) {
             if (!disabled)
-                this.player.setScoreboard(Main.empty);
+                this.player.setScoreboard(ScoreboardPlugin.empty);
             disabled = true;
             return;
         } else if (Session.re_enable_players.contains(this.player)) {
@@ -49,11 +49,11 @@ public class ScoreboardHolder {
             Session.re_enable_players.remove(this.player);
         }
 
-        slim.setTitle(app.getTitle().getLine());
+        slim.setTitle(boardRunnable.getTitle().getLine());
 
         int count = 0;
         HashMap<Integer, String> lines = new HashMap<>();
-        for (Row row : app.getRows()) {
+        for (Row row : boardRunnable.getRows()) {
             String line = row.getLine();
             if (row.placeholders) {
                 // Check if the PAPI plugin is enabled and the string has a placeholder

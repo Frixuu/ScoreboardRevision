@@ -1,7 +1,7 @@
 package io.github.frixuu.scoreboardrevision.board.slimboard;
 
 import io.github.frixuu.scoreboardrevision.Session;
-import io.github.frixuu.scoreboardrevision.board.App;
+import io.github.frixuu.scoreboardrevision.board.BoardRunnable;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -90,10 +90,10 @@ public class Slimboard {
         cache.remove(line); // Line has updated, remove it from cache!
         cache.put(line, string); // Put the new line in the cache
 
-        if (App.longline) string = prep(string);
+        if (BoardRunnable.longline) string = prep(string);
         else string = prepForShortline(string); // Prepare the string to preserve colors
         ArrayList<String> parts = null;
-        if (App.longline) parts = convertIntoPieces(string, 64);
+        if (BoardRunnable.longline) parts = convertIntoPieces(string, 64);
         else parts = convertIntoPieces(string, 16); // Convert it into pieces!
 
         t.setPrefix(fixAnyIssues(parts.get(0))); // Set the first
@@ -106,7 +106,7 @@ public class Slimboard {
      */
 
     private String fixAnyIssues(String part) {
-        if (App.longline) {
+        if (BoardRunnable.longline) {
             return part;
         } else {
             if (part.length() > 16) {
@@ -119,7 +119,7 @@ public class Slimboard {
 
     private String prep(String color) {
         ArrayList<String> parts = null;
-        if (App.longline) parts = convertIntoPieces(color, 64);
+        if (BoardRunnable.longline) parts = convertIntoPieces(color, 64);
         else parts = convertIntoPieces(color, 15);
         return parts.get(0) + "§f" + getLastColor(parts.get(0)) + parts.get(1);
     }

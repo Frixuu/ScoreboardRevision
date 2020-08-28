@@ -1,7 +1,7 @@
 package io.github.frixuu.scoreboardrevision.board.events;
 
 import io.github.frixuu.scoreboardrevision.Session;
-import io.github.frixuu.scoreboardrevision.board.App;
+import io.github.frixuu.scoreboardrevision.board.BoardRunnable;
 import io.github.frixuu.scoreboardrevision.board.ScoreboardHolder;
 import io.github.frixuu.scoreboardrevision.utils.ChatUtils;
 import org.bukkit.event.EventHandler;
@@ -13,19 +13,19 @@ import org.bukkit.event.player.PlayerJoinEvent;
  */
 public class EIntergrate implements Listener {
 
-    private final App app;
+    private final BoardRunnable boardRunnable;
 
-    public EIntergrate(App app) {
-        this.app = app;
+    public EIntergrate(BoardRunnable boardRunnable) {
+        this.boardRunnable = boardRunnable;
     }
 
     @EventHandler
     public void Intergrate(PlayerJoinEvent e) {
 
-        if (app == null || !app.isdefault) return;
+        if (boardRunnable == null || !boardRunnable.isdefault) return;
         if (e.getPlayer().isOp() && !Session.isuptodate)
             e.getPlayer().sendMessage(ChatUtils.color("&cYou are running an outdated version of Scoreboard, please update as soon as possible for performance gain, security- or bugfixes."));
-        new ScoreboardHolder(app, e.getPlayer());
+        new ScoreboardHolder(boardRunnable, e.getPlayer());
     }
 
 }

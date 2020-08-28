@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by Rien on 21-10-2018.
  */
-public class App extends BukkitRunnable {
+public class BoardRunnable extends BukkitRunnable {
 
     public static boolean longline = false;
     private final Row title;
@@ -29,9 +29,9 @@ public class App extends BukkitRunnable {
      *
      * @param board
      */
-    public App(String board) {
+    public BoardRunnable(String board) {
         // conf
-        App.longline = ConfigControl.get().gc("settings").getBoolean("settings.longline"); // Are we in longline?
+        BoardRunnable.longline = ConfigControl.get().gc("settings").getBoolean("settings.longline"); // Are we in longline?
         this.board = board; // What is the current board?
 
         //Events

@@ -1,7 +1,7 @@
 package io.github.frixuu.scoreboardrevision.board.events;
 
-import io.github.frixuu.scoreboardrevision.Main;
-import io.github.frixuu.scoreboardrevision.board.App;
+import io.github.frixuu.scoreboardrevision.ScoreboardPlugin;
+import io.github.frixuu.scoreboardrevision.board.BoardRunnable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -11,17 +11,17 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class EDeintergrate implements Listener {
 
-    private final App app;
+    private final BoardRunnable boardRunnable;
 
-    public EDeintergrate(App app) {
-        this.app = app;
+    public EDeintergrate(BoardRunnable boardRunnable) {
+        this.boardRunnable = boardRunnable;
     }
 
     @EventHandler
     public void Deintergrate(PlayerQuitEvent e) {
-        if (app == null) return;
-        app.unregisterHolder(e.getPlayer());
-        e.getPlayer().setScoreboard(Main.empty);
+        if (boardRunnable == null) return;
+        boardRunnable.unregisterHolder(e.getPlayer());
+        e.getPlayer().setScoreboard(ScoreboardPlugin.empty);
     }
 
 }
