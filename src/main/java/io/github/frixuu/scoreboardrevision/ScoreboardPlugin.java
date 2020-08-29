@@ -4,7 +4,6 @@ import io.github.frixuu.scoreboardrevision.board.BoardRunnable;
 import io.github.frixuu.scoreboardrevision.board.WorldManager;
 import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
 import lombok.var;
-import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
@@ -80,7 +79,7 @@ public class ScoreboardPlugin extends JavaPlugin {
      * Create the commands
      */
     private void registerCommands() {
-        Objects.requireNonNull(getCommand("sb")).setExecutor(new CommandManager(this));
+        Objects.requireNonNull(getCommand("sb")).setExecutor(new ScoreboardCommand(this));
     }
 
 }
