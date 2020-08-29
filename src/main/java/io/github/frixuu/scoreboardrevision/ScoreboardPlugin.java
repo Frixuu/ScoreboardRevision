@@ -68,22 +68,12 @@ public class ScoreboardPlugin extends JavaPlugin {
         var scoreboardManager = getServer().getScoreboardManager();
         empty = scoreboardManager.getNewScoreboard();
 
-        autoloadDependencies();
         registerCommands();
         loadBoards();
 
         new WorldManager().runTaskTimer(this, 20L, 40L);
 
         getLogger().info("Hey, we're online! ScoreboardRevision is now running.");
-    }
-
-    /**
-     * Load in dependencies
-     */
-    private void autoloadDependencies() {
-        for (String dependency : Session.dependencies)
-            if (Bukkit.getPluginManager().isPluginEnabled(dependency))
-                Session.enabled_dependencies.add(dependency);
     }
 
     /**

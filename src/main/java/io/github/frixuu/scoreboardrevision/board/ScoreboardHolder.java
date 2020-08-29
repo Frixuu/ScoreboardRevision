@@ -59,7 +59,7 @@ public class ScoreboardHolder {
             String line = row.getCurrentLine();
             if (row.containsPlaceholders) {
                 // Check if the PAPI plugin is enabled and the string has a placeholder
-                if (Session.enabled_dependencies.contains(Session.dependencies[0]) && org.bukkit.Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI") &&
+                if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI") &&
                     PlaceholderAPI.containsPlaceholders(line)) {
                     line = PlaceholderAPI.setPlaceholders(player, line);
                 }

@@ -64,7 +64,7 @@ public class Slimboard {
     public void setTitle(String string) {
         if (string == null) string = ""; // Is there no title? Make it empty!
         // Check if the PAPI plugin is enabled and the string has a placeholder
-        if (Session.enabled_dependencies.contains(Session.dependencies[0]) && org.bukkit.Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI") &&
+        if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI") &&
             PlaceholderAPI.containsPlaceholders(string)) {
             string = PlaceholderAPI.setPlaceholders(player, string); // Run placeholders!
         }
@@ -156,47 +156,4 @@ public class Slimboard {
 
         return parts;
     }
-
-//    private ArrayList<String> getPartsForShortline(String s)
-//    {
-//
-//        ArrayList<String> parts = new ArrayList<>();
-//
-//        if(ChatColor.stripColor(s).length() > 16)
-//        {
-//            parts.add(s.substring(0, 16));
-//
-//            String s2 = s.substring(16, s.length());
-//            if(s2.length() > 16)
-//                s2 = s2.substring(0, 16);
-//            parts.add(s2);
-//        } else {
-//            parts.add(s);
-//            parts.add("");
-//        }
-//
-//        return parts;
-//    }
-//    private ArrayList<String> getPartsForLongline(String s)
-//    {
-//
-//        ArrayList<String> parts = new ArrayList<>();
-//
-//        if(ChatColor.stripColor(s).length() > 64)
-//        {
-//            parts.add(s.substring(0, 64));
-//
-//            String s2 = s.substring(64, s.length());
-//            if(s2.length() > 64)
-//                s2 = s2.substring(0, 64);
-//            parts.add(s2);
-//        } else {
-//            parts.add(s);
-//            parts.add("");
-//        }
-//
-//        return parts;
-//
-//    }
-
 }
