@@ -4,6 +4,7 @@ import io.github.frixuu.scoreboardrevision.utils.ChatUtils;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Rien on 21-10-2018.
@@ -29,8 +30,10 @@ public class ScoreboardRow {
             lines.add("");
         }
 
-        this.lines = lines;
         this.interval = interval;
+        this.lines = lines.stream()
+            .map(line -> line.endsWith("Â ") ? line.substring(0, line.length() - 2) : line)
+            .collect(Collectors.toList());
 
         isStatic = lines.size() == 1;
         containsPlaceholders = lines.stream().anyMatch(line -> line.contains("%"));
