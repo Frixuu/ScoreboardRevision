@@ -9,19 +9,18 @@ import org.bukkit.event.player.PlayerQuitEvent;
 /**
  * Created by Rien on 23-10-2018.
  */
-public class EDeintergrate implements Listener {
+public class PlayerQuitListener implements Listener {
 
     private final BoardRunnable boardRunnable;
 
-    public EDeintergrate(BoardRunnable boardRunnable) {
+    public PlayerQuitListener(BoardRunnable boardRunnable) {
         this.boardRunnable = boardRunnable;
     }
 
     @EventHandler
-    public void Deintergrate(PlayerQuitEvent e) {
+    public void onPlayerQuit(PlayerQuitEvent e) {
         if (boardRunnable == null) return;
         boardRunnable.unregisterHolder(e.getPlayer());
         e.getPlayer().setScoreboard(ScoreboardPlugin.empty);
     }
-
 }
