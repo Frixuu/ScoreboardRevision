@@ -4,6 +4,7 @@ import io.github.frixuu.scoreboardrevision.ScoreboardPlugin;
 import io.github.frixuu.scoreboardrevision.Session;
 import io.github.frixuu.scoreboardrevision.board.slimboard.Slimboard;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 /**
@@ -24,12 +25,12 @@ public class ScoreboardHolder {
      * @param boardRunnable
      * @param player
      */
-    public ScoreboardHolder(BoardRunnable boardRunnable, ScoreboardPlugin plugin, Player player) {
+    public ScoreboardHolder(BoardRunnable boardRunnable, ScoreboardPlugin plugin, FileConfiguration config, Player player) {
         this.boardRunnable = boardRunnable;
         this.player = player;
         this.plugin = plugin;
 
-        slim = new Slimboard(plugin, player, boardRunnable.getRows().size());
+        slim = new Slimboard(plugin, config, player, boardRunnable.getRows().size());
 
         boardRunnable.registerHolder(this);
     }

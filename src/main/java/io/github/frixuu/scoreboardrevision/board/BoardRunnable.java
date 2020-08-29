@@ -1,25 +1,22 @@
 package io.github.frixuu.scoreboardrevision.board;
 
 import io.github.frixuu.scoreboardrevision.ScoreboardPlugin;
-import io.github.frixuu.scoreboardrevision.board.events.PlayerQuitListener;
 import io.github.frixuu.scoreboardrevision.board.events.PlayerJoinListener;
+import io.github.frixuu.scoreboardrevision.board.events.PlayerQuitListener;
 import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
 import lombok.Getter;
 import lombok.var;
 import org.bukkit.Server;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Rien on 21-10-2018.
  */
 public class BoardRunnable extends BukkitRunnable {
 
-    public static boolean longline = false;
     @Getter private final ScoreboardRow titleRow;
     @Getter private final ArrayList<ScoreboardRow> rows = new ArrayList<>();
     public ArrayList<ScoreboardHolder> holders = new ArrayList<>();
@@ -33,12 +30,11 @@ public class BoardRunnable extends BukkitRunnable {
      */
     public BoardRunnable(String board, Server server, ScoreboardPlugin plugin) {
         var config = ConfigControl.get().getConfig("settings");
-        BoardRunnable.longline = config.getBoolean("settings.longline"); // Are we in longline?
         this.board = board; // What is the current board?
 
         //Events
         var pluginManager = server.getPluginManager();
-        pluginManager.registerEvents(new PlayerJoinListener(this, plugin), plugin);
+        pluginManager.registerEvents(new PlayerJoinListener(this, plugin, config), plugin);
         pluginManager.registerEvents(new PlayerQuitListener(this), plugin);
 
         // Setup title row
@@ -59,7 +55,7 @@ public class BoardRunnable extends BukkitRunnable {
         // Register already joined players
         if (board.equals("board")) {
             server.getOnlinePlayers()
-                .forEach(player -> new ScoreboardHolder(this, plugin, player));
+                .forEach(player -> new ScoreboardHolder(this, plugin, config, player));
         }
     }
 

@@ -1,15 +1,16 @@
 package io.github.frixuu.scoreboardrevision;
 
+import io.github.frixuu.scoreboardrevision.board.BoardFactory;
 import io.github.frixuu.scoreboardrevision.board.BoardRunnable;
 import io.github.frixuu.scoreboardrevision.board.WorldManager;
 import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
 import lombok.var;
-import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -17,20 +18,24 @@ import java.util.Objects;
  */
 public class ScoreboardPlugin extends JavaPlugin {
 
+    private BoardFactory boardFactory;
+
     public static Scoreboard empty;
 
-    public static HashMap<String, BoardRunnable> apps = new HashMap<>();
+    public static Map<String, BoardRunnable> boards = new HashMap<>();
 
     /**
      * Load in all board drivers
      */
     public void loadBoards() {
         var config = ConfigControl.get().getConfig("settings");
-        newApp(getServer(), "board", true); // Default board
+        var safeMode = config.getBoolean("settings.safe-mode", true);
+
+        createAndRegisterBoard("board", true, !safeMode); // Default board
         config.getStringList("enabled-boards").forEach(board -> {
-            getLogger().info("Attempting to start app-creator for: " + board);
+            getLogger().info("Attempting to start board-creator for: " + board);
             if (config.isConfigurationSection(board)) {
-                newApp(getServer(), board, false);
+                createAndRegisterBoard(board, false, !safeMode);
             } else {
                 getLogger().severe("Tried enabling board '" + board + "', but it does not exist!");
             }
@@ -41,31 +46,22 @@ public class ScoreboardPlugin extends JavaPlugin {
      * Unload all board drivers
      */
     public static void disolveBoards() {
-        apps.values().forEach(BukkitRunnable::cancel);
-        apps.clear();
+        boards.values().forEach(BukkitRunnable::cancel);
+        boards.clear();
     }
 
     /**
-     * Construct a new app
-     *
-     * @param board
-     * @param isdefault
+     * Constructs a new board.
      */
-    public void newApp(Server server, String board, boolean isdefault) {
-        var boardRunnable = new BoardRunnable(board, server, this);
-        var safeMode = ConfigControl.get().getConfig("settings").getBoolean("settings.safe-mode", true);
-        if (safeMode) {
-            boardRunnable.runTaskTimer(this, 1L, 1L);
-        } else {
-            boardRunnable.runTaskTimerAsynchronously(this, 1L, 1L);
-        }
-        apps.put(board, boardRunnable);
-        getLogger().info("Loaded app handler for board: " + board);
-        boardRunnable.isdefault = isdefault;
+    public void createAndRegisterBoard(String boardKey, boolean isDefault, boolean async) {
+        var boardTask = boardFactory.create(boardKey, isDefault, async);
+        boards.put(boardKey, boardTask);
+        getLogger().info("Loaded board handler for board: " + boardKey);
     }
 
     @Override
     public void onEnable() {
+        boardFactory = new BoardFactory(this);
         var config = new ConfigControl(this);
         ConfigControl.setInstance(config);
         config.createDataFiles();
@@ -87,5 +83,4 @@ public class ScoreboardPlugin extends JavaPlugin {
     private void registerCommands() {
         Objects.requireNonNull(getCommand("sb")).setExecutor(new ScoreboardCommand(this));
     }
-
 }

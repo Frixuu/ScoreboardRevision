@@ -1,9 +1,9 @@
 package io.github.frixuu.scoreboardrevision.board.slimboard;
 
-import io.github.frixuu.scoreboardrevision.board.BoardRunnable;
 import lombok.var;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -23,9 +23,12 @@ import static org.bukkit.ChatColor.getLastColors;
 public class Slimboard {
 
     private final Player player;
+    private final FileConfiguration config;
     private final Plugin plugin;
     private final Objective objective;
+
     private final int linecount;
+    private final boolean lineCanBeLonger;
     private final HashMap<Integer, String> cache = new HashMap<>();
     public Scoreboard board;
 
@@ -36,10 +39,14 @@ public class Slimboard {
      * @param player
      * @param linecount
      */
-    public Slimboard(Plugin plugin, Player player, int linecount) {
+    public Slimboard(Plugin plugin, FileConfiguration config, Player player, int linecount) {
         this.player = player;
+        this.config = config;
         this.plugin = plugin;
         this.linecount = linecount;
+
+        this.lineCanBeLonger = config.getBoolean("settings.longline");
+
         this.board = this.plugin.getServer().getScoreboardManager().getNewScoreboard();
         this.objective = this.board.registerNewObjective("sb1", "sb2");
         this.objective.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -104,30 +111,27 @@ public class Slimboard {
         cache.put(line, string);
 
         // Prepare the string to preserve colors
-        string = BoardRunnable.longline ? prep(string) : prepForShortline(string);
-        var allowedLineLength = BoardRunnable.longline ? 64 : 16;
+        string = lineCanBeLonger ? prep(string) : prepForShortline(string);
+        var allowedLineLength = lineCanBeLonger ? 64 : 16;
         var parts = convertIntoPieces(string, allowedLineLength);
 
         Team team = board.getTeam((line) + "");
-        team.setPrefix(trimIfNecessary(parts.get(0))); // Set the first
-        team.setSuffix(trimIfNecessary(parts.get(1))); // Set the scond
-    }
-
-
-    /*
-    Parter
-     */
-
-    private static String trimIfNecessary(String part) {
-        if (BoardRunnable.longline || part.length() <= 16) {
-            return part;
+        if (lineCanBeLonger) {
+            team.setPrefix(parts.get(0));
+            team.setSuffix(parts.get(1));
         } else {
-            return part.substring(16);
+            team.setPrefix(trimIfNecessary(parts.get(0)));
+            team.setSuffix(trimIfNecessary(parts.get(1)));
         }
     }
 
+
+    private static String trimIfNecessary(String part) {
+        return part.length() <= 16 ? part : part.substring(16);
+    }
+
     private String prep(String color) {
-        var allowedLength = BoardRunnable.longline ? 64 : 15;
+        var allowedLength = lineCanBeLonger ? 64 : 15;
         var parts = convertIntoPieces(color, allowedLength);
         return parts.get(0) + "§f" + getLastColors(parts.get(0)) + parts.get(1);
     }
