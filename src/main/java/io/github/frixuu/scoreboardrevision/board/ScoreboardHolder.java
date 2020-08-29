@@ -49,13 +49,13 @@ public class ScoreboardHolder {
             Session.re_enable_players.remove(this.player);
         }
 
-        slim.setTitle(boardRunnable.getTitle().getLine());
+        slim.setTitle(boardRunnable.getTitle().getCurrentLine());
 
         int count = 0;
         HashMap<Integer, String> lines = new HashMap<>();
-        for (Row row : boardRunnable.getRows()) {
-            String line = row.getLine();
-            if (row.placeholders) {
+        for (ScoreboardRow row : boardRunnable.getRows()) {
+            String line = row.getCurrentLine();
+            if (row.containsPlaceholders) {
                 // Check if the PAPI plugin is enabled and the string has a placeholder
                 if (Session.enabled_dependencies.contains(Session.dependencies[0]) && org.bukkit.Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI") &&
                     PlaceholderAPI.containsPlaceholders(line)) {

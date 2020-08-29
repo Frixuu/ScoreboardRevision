@@ -17,8 +17,8 @@ import java.util.List;
 public class BoardRunnable extends BukkitRunnable {
 
     public static boolean longline = false;
-    private final Row title;
-    private final ArrayList<Row> rows = new ArrayList<>();
+    private final ScoreboardRow title;
+    private final ArrayList<ScoreboardRow> rows = new ArrayList<>();
     private final ArrayList<Player> children = new ArrayList<>();
     public ArrayList<ScoreboardHolder> holders = new ArrayList<>();
     public String board;
@@ -41,14 +41,14 @@ public class BoardRunnable extends BukkitRunnable {
         // Setup title row
         List<String> lines = ConfigControl.get().gc("settings").getConfigurationSection(board + ".title").getStringList("liner"); // Get the lines
         int interval = ConfigControl.get().gc("settings").getInt(board + ".title.interval"); // Get the intervals
-        title = new Row((ArrayList<String>) lines, interval); // Create the title row!
+        title = new ScoreboardRow((ArrayList<String>) lines, interval); // Create the title row!
 
         for (int i = 1; i < 200; i++) // Loop over all lines
         {
             ConfigurationSection section = ConfigControl.get().gc("settings").getConfigurationSection(board + ".rows." + i); // Get their rows
             if (null != section) // Is the section null?
             {
-                Row row = new Row((ArrayList<String>) section.getStringList("liner"), section.getInt("interval")); // Create a new row
+                ScoreboardRow row = new ScoreboardRow((ArrayList<String>) section.getStringList("liner"), section.getInt("interval")); // Create a new row
                 rows.add(row); // Add this line to the row list
             }
         }
@@ -65,7 +65,7 @@ public class BoardRunnable extends BukkitRunnable {
      *
      * @return
      */
-    public ArrayList<Row> getRows() {
+    public ArrayList<ScoreboardRow> getRows() {
         return rows;
     }
 
@@ -74,7 +74,7 @@ public class BoardRunnable extends BukkitRunnable {
      *
      * @return
      */
-    public Row getTitle() {
+    public ScoreboardRow getTitle() {
         return title;
     }
 
@@ -113,7 +113,7 @@ public class BoardRunnable extends BukkitRunnable {
     public void run() {
         // Update rows
         title.update();
-        for (Row row : rows)
+        for (ScoreboardRow row : rows)
             row.update();
 
 
