@@ -1,7 +1,7 @@
 package io.github.frixuu.scoreboardrevision.board.slimboard;
 
-import io.github.frixuu.scoreboardrevision.Session;
 import io.github.frixuu.scoreboardrevision.board.BoardRunnable;
+import lombok.var;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -11,8 +11,11 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+
+import static org.bukkit.ChatColor.getLastColors;
 
 /**
  * Created by Rien on 23-10-2018.
@@ -62,17 +65,21 @@ public class Slimboard {
      * @param string
      */
     public void setTitle(String string) {
-        if (string == null) string = ""; // Is there no title? Make it empty!
+
+        if (string == null) {
+            string = "";
+        }
         // Check if the PAPI plugin is enabled and the string has a placeholder
         if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI") &&
             PlaceholderAPI.containsPlaceholders(string)) {
             string = PlaceholderAPI.setPlaceholders(player, string); // Run placeholders!
         }
 
-        if (cache.containsKey(-1) && cache.get(-1) == string) return; // Is it in cache?
-        cache.remove(-1); // Remove it from cache, it is different!
-        cache.put(-1, string); // Put this in the cache!
-        objective.setDisplayName(string); // And set the title
+        if (!cache.containsKey(-1) || !cache.get(-1).equals(string)) {
+            cache.remove(-1); // Remove it from cache, it is different!
+            cache.put(-1, string); // Put this in the cache!
+            objective.setDisplayName(string); // And set the title
+        }
     }
 
     /**
@@ -82,22 +89,28 @@ public class Slimboard {
      * @param string
      */
     public void setLine(int line, String string) {
-        Team t = board.getTeam((line) + ""); // Get the team we use
-        if (string == null) string = ""; // Line null? No problem, make it empty!
 
-        if (cache.containsKey(line) && cache.get(line) == string)
-            return; // The line hasn't updated?
-        cache.remove(line); // Line has updated, remove it from cache!
-        cache.put(line, string); // Put the new line in the cache
+        if (string == null) {
+            string = "";
+        }
 
-        if (BoardRunnable.longline) string = prep(string);
-        else string = prepForShortline(string); // Prepare the string to preserve colors
-        ArrayList<String> parts = null;
-        if (BoardRunnable.longline) parts = convertIntoPieces(string, 64);
-        else parts = convertIntoPieces(string, 16); // Convert it into pieces!
+        // The line hasn't updated?
+        if (cache.containsKey(line) && cache.get(line) == string) {
+            return;
+        }
 
-        t.setPrefix(fixAnyIssues(parts.get(0))); // Set the first
-        t.setSuffix(fixAnyIssues(parts.get(1))); // Set the scond
+        // Line has updated, refresh the cache!
+        cache.remove(line);
+        cache.put(line, string);
+
+        // Prepare the string to preserve colors
+        string = BoardRunnable.longline ? prep(string) : prepForShortline(string);
+        var allowedLineLength = BoardRunnable.longline ? 64 : 16;
+        var parts = convertIntoPieces(string, allowedLineLength);
+
+        Team team = board.getTeam((line) + "");
+        team.setPrefix(trimIfNecessary(parts.get(0))); // Set the first
+        team.setSuffix(trimIfNecessary(parts.get(1))); // Set the scond
     }
 
 
@@ -105,55 +118,38 @@ public class Slimboard {
     Parter
      */
 
-    private String fixAnyIssues(String part) {
-        if (BoardRunnable.longline) {
+    private static String trimIfNecessary(String part) {
+        if (BoardRunnable.longline || part.length() <= 16) {
             return part;
         } else {
-            if (part.length() > 16) {
-                return part.substring(16);
-            } else {
-                return part;
-            }
+            return part.substring(16);
         }
     }
 
     private String prep(String color) {
-        ArrayList<String> parts = null;
-        if (BoardRunnable.longline) parts = convertIntoPieces(color, 64);
-        else parts = convertIntoPieces(color, 15);
-        return parts.get(0) + "§f" + getLastColor(parts.get(0)) + parts.get(1);
+        var allowedLength = BoardRunnable.longline ? 64 : 15;
+        var parts = convertIntoPieces(color, allowedLength);
+        return parts.get(0) + "§f" + getLastColors(parts.get(0)) + parts.get(1);
     }
 
     private String prepForShortline(String color) {
-        if (color.length() > 16) {
-            ArrayList<String> pieces = convertIntoPieces(color, 16);
-            return pieces.get(0) + "§f" + getLastColor(pieces.get(0)) + pieces.get(1);
+        if (color.length() <= 16) {
+            return color;
         }
-        return color;
+        var pieces = convertIntoPieces(color, 16);
+        return pieces.get(0) + "§f" + getLastColors(pieces.get(0)) + pieces.get(1);
     }
 
-    private String getLastColor(String s) {
-        String last = ChatColor.getLastColors(s);
-        if (last == null)
-            return "";
-        return last;
-    }
-
-    private ArrayList<String> convertIntoPieces(String s, int allowed_line_size) {
-        ArrayList<String> parts = new ArrayList<>();
-
-        if (ChatColor.stripColor(s).length() > allowed_line_size) {
-            parts.add(s.substring(0, allowed_line_size));
-
-            String s2 = s.substring(allowed_line_size);
-            if (s2.length() > allowed_line_size)
-                s2 = s2.substring(0, allowed_line_size);
-            parts.add(s2);
-        } else {
-            parts.add(s);
-            parts.add("");
+    private List<String> convertIntoPieces(String input, int allowedLineLength) {
+        if (ChatColor.stripColor(input).length() <= allowedLineLength) {
+            return Arrays.asList(input, "");
         }
 
-        return parts;
+        var first = input.substring(0, allowedLineLength);
+        var second = input.substring(allowedLineLength);
+        if (second.length() > allowedLineLength) {
+            second = second.substring(0, allowedLineLength);
+        }
+        return Arrays.asList(first, second);
     }
 }
