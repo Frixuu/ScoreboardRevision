@@ -70,7 +70,7 @@ public class BoardRunnable extends BukkitRunnable {
 
     public void unregisterHolder(Player player) {
         holders.stream()
-            .filter(holder -> holder.player == player)
+            .filter(holder -> holder.getPlayer() == player)
             .findFirst()
             .ifPresent(this::unregisterHolder);
     }
