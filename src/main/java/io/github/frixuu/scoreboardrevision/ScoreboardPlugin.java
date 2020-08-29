@@ -5,7 +5,7 @@ import io.github.frixuu.scoreboardrevision.board.BoardRunnable;
 import io.github.frixuu.scoreboardrevision.board.WorldManager;
 import io.github.frixuu.scoreboardrevision.services.PlaceholderApiService;
 import io.github.frixuu.scoreboardrevision.services.PlaceholderService;
-import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
+import io.github.frixuu.scoreboardrevision.config.ConfigProvider;
 import lombok.var;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -30,7 +30,7 @@ public class ScoreboardPlugin extends JavaPlugin {
      * Load in all board drivers
      */
     public void loadBoards() {
-        var config = ConfigControl.get().getConfig("settings");
+        var config = ConfigProvider.get().getConfig("settings");
         var safeMode = config.getBoolean("settings.safe-mode", true);
 
         createAndRegisterBoard("board", true, !safeMode); // Default board
@@ -70,8 +70,8 @@ public class ScoreboardPlugin extends JavaPlugin {
 
         boardFactory = new BoardFactory(this, placeholderService);
 
-        var config = new ConfigControl(this);
-        ConfigControl.setInstance(config);
+        var config = new ConfigProvider(this);
+        ConfigProvider.setInstance(config);
         config.createDataFiles();
 
         var scoreboardManager = getServer().getScoreboardManager();
@@ -94,7 +94,7 @@ public class ScoreboardPlugin extends JavaPlugin {
 
     public void reloadBoards() {
         unregisterAllBoards();
-        ConfigControl.get().reloadConfigs();
+        ConfigProvider.get().reloadConfigs();
         loadBoards();
     }
 }

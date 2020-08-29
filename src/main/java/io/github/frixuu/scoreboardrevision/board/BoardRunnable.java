@@ -4,7 +4,7 @@ import io.github.frixuu.scoreboardrevision.ScoreboardPlugin;
 import io.github.frixuu.scoreboardrevision.board.events.PlayerJoinListener;
 import io.github.frixuu.scoreboardrevision.board.events.PlayerQuitListener;
 import io.github.frixuu.scoreboardrevision.services.PlaceholderService;
-import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
+import io.github.frixuu.scoreboardrevision.config.ConfigProvider;
 import lombok.Getter;
 import lombok.var;
 import org.bukkit.Server;
@@ -30,7 +30,7 @@ public class BoardRunnable extends BukkitRunnable {
         this.boardKey = boardKey;
         this.isDefault = isDefault;
 
-        var config = ConfigControl.get().getConfig("settings");
+        var config = ConfigProvider.get().getConfig("settings");
 
         var pluginManager = server.getPluginManager();
         pluginManager.registerEvents(new PlayerJoinListener(this, plugin, config, placeholderService), plugin);

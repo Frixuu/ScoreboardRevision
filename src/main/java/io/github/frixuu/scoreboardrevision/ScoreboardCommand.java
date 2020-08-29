@@ -1,6 +1,5 @@
 package io.github.frixuu.scoreboardrevision;
 
-import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
 import lombok.RequiredArgsConstructor;
 import lombok.var;
 import org.bukkit.command.Command;

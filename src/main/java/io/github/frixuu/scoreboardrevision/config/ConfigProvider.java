@@ -1,4 +1,4 @@
-package io.github.frixuu.scoreboardrevision.utils;
+package io.github.frixuu.scoreboardrevision.config;
 
 
 import io.github.frixuu.scoreboardrevision.ScoreboardPlugin;
@@ -18,19 +18,19 @@ import static io.github.frixuu.scoreboardrevision.utils.ResourceUtils.getResourc
 /**
  * Created by Rien on 21-10-2018.
  */
-public class ConfigControl {
+public class ConfigProvider {
 
     private final ScoreboardPlugin plugin;
 
-    @Setter private static ConfigControl instance = null;
+    @Setter private static ConfigProvider instance = null;
     private final HashMap<String, FileConfiguration> designations = new HashMap<>();
 
-    public ConfigControl(ScoreboardPlugin plugin) {
+    public ConfigProvider(ScoreboardPlugin plugin) {
         this.plugin = plugin;
         this.createDataFiles();
     }
 
-    public static ConfigControl get() {
+    public static ConfigProvider get() {
         assert instance != null;
         return instance;
     }
@@ -41,7 +41,7 @@ public class ConfigControl {
             plugin.getDataFolder().mkdirs();
         }
 
-        createConfigFile("settings.yml");
+        createConfigFile("settings");
     }
 
     public void purge() {

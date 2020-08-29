@@ -1,7 +1,7 @@
 package io.github.frixuu.scoreboardrevision.board;
 
 import io.github.frixuu.scoreboardrevision.Session;
-import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
+import io.github.frixuu.scoreboardrevision.config.ConfigProvider;
 import org.bukkit.Server;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -13,7 +13,7 @@ public class WorldManager extends BukkitRunnable {
     private final List<String> disabledWorlds;
     private final Server server;
 
-    public WorldManager(Server server, ConfigControl config) {
+    public WorldManager(Server server, ConfigProvider config) {
         this.server = server;
         disabledWorlds = config.getConfig("settings").getStringList("disabled-worlds")
             .stream()
