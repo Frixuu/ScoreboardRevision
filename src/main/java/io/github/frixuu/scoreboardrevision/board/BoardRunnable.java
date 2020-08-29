@@ -3,6 +3,7 @@ package io.github.frixuu.scoreboardrevision.board;
 import io.github.frixuu.scoreboardrevision.ScoreboardPlugin;
 import io.github.frixuu.scoreboardrevision.board.events.PlayerJoinListener;
 import io.github.frixuu.scoreboardrevision.board.events.PlayerQuitListener;
+import io.github.frixuu.scoreboardrevision.services.PlaceholderService;
 import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
 import lombok.Getter;
 import lombok.var;
@@ -25,14 +26,14 @@ public class BoardRunnable extends BukkitRunnable {
     @Getter private final String boardKey;
     @Getter private final boolean isDefault;
 
-    public BoardRunnable(String boardKey, Server server, ScoreboardPlugin plugin, boolean isDefault) {
+    public BoardRunnable(String boardKey, Server server, ScoreboardPlugin plugin, PlaceholderService placeholderService, boolean isDefault) {
         this.boardKey = boardKey;
         this.isDefault = isDefault;
 
         var config = ConfigControl.get().getConfig("settings");
 
         var pluginManager = server.getPluginManager();
-        pluginManager.registerEvents(new PlayerJoinListener(this, plugin, config), plugin);
+        pluginManager.registerEvents(new PlayerJoinListener(this, plugin, config, placeholderService), plugin);
         pluginManager.registerEvents(new PlayerQuitListener(this), plugin);
 
         // Setup title row
@@ -53,7 +54,7 @@ public class BoardRunnable extends BukkitRunnable {
         // Register already joined players
         if (isDefault) {
             server.getOnlinePlayers()
-                .forEach(player -> new ScoreboardHolder(this, plugin, config, player));
+                .forEach(player -> new ScoreboardHolder(this, plugin, placeholderService, config, player));
         }
     }
 

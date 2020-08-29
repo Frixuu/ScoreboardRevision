@@ -38,9 +38,7 @@ public class ScoreboardCommand implements CommandExecutor {
         switch (subcommand) {
             case "reload":
                 if (player.hasPermission("scoreboard.reload")) {
-                    plugin.disolveBoards();
-                    ConfigControl.get().reloadConfigs();
-                    plugin.loadBoards();
+                    plugin.reloadBoards();
                     sendShortPrefixedMessage(player, "Scoreboard reloaded");
                 } else {
                     sendShortPrefixedMessage(player, "You lack the permission &cscoreboard.reload");

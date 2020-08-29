@@ -3,6 +3,8 @@ package io.github.frixuu.scoreboardrevision;
 import io.github.frixuu.scoreboardrevision.board.BoardFactory;
 import io.github.frixuu.scoreboardrevision.board.BoardRunnable;
 import io.github.frixuu.scoreboardrevision.board.WorldManager;
+import io.github.frixuu.scoreboardrevision.services.PlaceholderApiService;
+import io.github.frixuu.scoreboardrevision.services.PlaceholderService;
 import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
 import lombok.var;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -42,10 +44,7 @@ public class ScoreboardPlugin extends JavaPlugin {
         });
     }
 
-    /**
-     * Unload all board drivers
-     */
-    public static void disolveBoards() {
+    public void unregisterAllBoards() {
         boards.values().forEach(BukkitRunnable::cancel);
         boards.clear();
     }
@@ -61,7 +60,16 @@ public class ScoreboardPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        boardFactory = new BoardFactory(this);
+        PlaceholderService placeholderService = null;
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            placeholderService = new PlaceholderApiService();
+            getLogger().info("PlaceholderAPI is present! Registered support for placeholders.");
+        } else {
+            getLogger().warning("PlaceholderAPI is not enabled on this server! Placeholder support is disabled.");
+        }
+
+        boardFactory = new BoardFactory(this, placeholderService);
+
         var config = new ConfigControl(this);
         ConfigControl.setInstance(config);
         config.createDataFiles();
@@ -82,5 +90,11 @@ public class ScoreboardPlugin extends JavaPlugin {
      */
     private void registerCommands() {
         Objects.requireNonNull(getCommand("sb")).setExecutor(new ScoreboardCommand(this));
+    }
+
+    public void reloadBoards() {
+        unregisterAllBoards();
+        ConfigControl.get().reloadConfigs();
+        loadBoards();
     }
 }

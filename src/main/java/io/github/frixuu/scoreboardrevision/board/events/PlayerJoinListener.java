@@ -3,6 +3,7 @@ package io.github.frixuu.scoreboardrevision.board.events;
 import io.github.frixuu.scoreboardrevision.ScoreboardPlugin;
 import io.github.frixuu.scoreboardrevision.board.BoardRunnable;
 import io.github.frixuu.scoreboardrevision.board.ScoreboardHolder;
+import io.github.frixuu.scoreboardrevision.services.PlaceholderService;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
@@ -18,11 +19,12 @@ public class PlayerJoinListener implements Listener {
     private final BoardRunnable boardRunnable;
     private final ScoreboardPlugin plugin;
     private final FileConfiguration config;
+    private final PlaceholderService placeholderService;
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         if (boardRunnable.isDefault()) {
-            new ScoreboardHolder(boardRunnable, plugin, config, e.getPlayer());
+            new ScoreboardHolder(boardRunnable, plugin, placeholderService, config, e.getPlayer());
         }
     }
 }

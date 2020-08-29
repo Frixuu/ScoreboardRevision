@@ -1,5 +1,6 @@
 package io.github.frixuu.scoreboardrevision.board.slimboard;
 
+import io.github.frixuu.scoreboardrevision.services.PlaceholderService;
 import lombok.Getter;
 import lombok.var;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -27,6 +28,7 @@ import static org.bukkit.ChatColor.getLastColors;
 public class Slimboard {
 
     private final Player player;
+    private final PlaceholderService placeholderService;
     private final Plugin plugin;
     private final Objective objective;
 
@@ -35,9 +37,10 @@ public class Slimboard {
     private final Map<Integer, String> rowCache = new HashMap<>();
     public Scoreboard board;
 
-    public Slimboard(Plugin plugin, FileConfiguration config, Player player, final int size) {
+    public Slimboard(Plugin plugin, FileConfiguration config, Player player, PlaceholderService placeholderService, final int size) {
         this.player = player;
         this.plugin = plugin;
+        this.placeholderService = placeholderService;
         this.rowCount = size;
 
         lineCanBeLonger = config.getBoolean("settings.longline");
