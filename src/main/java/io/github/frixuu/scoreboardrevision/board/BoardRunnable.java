@@ -32,8 +32,8 @@ public class BoardRunnable extends BukkitRunnable {
      * @param board
      */
     public BoardRunnable(String board, Server server, ScoreboardPlugin plugin) {
-        // conf
-        BoardRunnable.longline = ConfigControl.get().getConfig("settings").getBoolean("settings.longline"); // Are we in longline?
+        var config = ConfigControl.get().getConfig("settings");
+        BoardRunnable.longline = config.getBoolean("settings.longline"); // Are we in longline?
         this.board = board; // What is the current board?
 
         //Events
@@ -42,17 +42,17 @@ public class BoardRunnable extends BukkitRunnable {
         pluginManager.registerEvents(new PlayerQuitListener(this), plugin);
 
         // Setup title row
-        List<String> lines = ConfigControl.get().getConfig("settings").getConfigurationSection(board + ".title").getStringList("liner"); // Get the lines
-        int interval = ConfigControl.get().getConfig("settings").getInt(board + ".title.interval"); // Get the intervals
-        titleRow = new ScoreboardRow((ArrayList<String>) lines, interval); // Create the title row!
+        var sectionTitle = config.getConfigurationSection(board + ".title");
+        var linesTitle = sectionTitle.getStringList("liner"); // Get the lines
+        var intervalTitle = config.getInt(board + ".title.interval"); // Get the intervals
+        titleRow = new ScoreboardRow(linesTitle, intervalTitle); // Create the title row!
 
-        for (int i = 1; i < 200; i++) // Loop over all lines
-        {
-            ConfigurationSection section = ConfigControl.get().getConfig("settings").getConfigurationSection(board + ".rows." + i); // Get their rows
-            if (null != section) // Is the section null?
-            {
-                ScoreboardRow row = new ScoreboardRow((ArrayList<String>) section.getStringList("liner"), section.getInt("interval")); // Create a new row
-                rows.add(row); // Add this line to the row list
+        for (int i = 1; i < 200; i++) {
+            var section = config.getConfigurationSection(board + ".rows." + i); // Get their rows
+            if (section != null) {
+                var interval = section.getInt("interval");
+                var lines = section.getStringList("liner");
+                rows.add(new ScoreboardRow(lines, interval));
             }
         }
 
@@ -87,11 +87,10 @@ public class BoardRunnable extends BukkitRunnable {
      * @param player
      */
     public void unregisterHolder(Player player) {
-        for (ScoreboardHolder holder : holders)
-            if (holder.player == player) {
-                holders.remove(holder);
-                break;
-            }
+        holders.stream()
+            .filter(holder -> holder.player == player)
+            .findFirst()
+            .ifPresent(holder -> holders.remove(holder));
     }
 
     @Override

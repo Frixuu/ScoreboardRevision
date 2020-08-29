@@ -25,11 +25,11 @@ public class ScoreboardPlugin extends JavaPlugin {
      * Load in all board drivers
      */
     public void loadBoards() {
-        var config = ConfigControl.get();
+        var config = ConfigControl.get().getConfig("settings");
         newApp(getServer(), "board", true); // Default board
-        config.getConfig("settings").getStringList("enabled-boards").forEach(board -> {
+        config.getStringList("enabled-boards").forEach(board -> {
             getLogger().info("Attempting to start app-creator for: " + board);
-            if (config.getConfig("settings").isConfigurationSection(board)) {
+            if (config.isConfigurationSection(board)) {
                 newApp(getServer(), board, false);
             } else {
                 getLogger().severe("Tried enabling board '" + board + "', but it does not exist!");
