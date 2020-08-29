@@ -4,6 +4,8 @@ import io.github.frixuu.scoreboardrevision.ScoreboardPlugin;
 import io.github.frixuu.scoreboardrevision.Session;
 import io.github.frixuu.scoreboardrevision.board.slimboard.Slimboard;
 import io.github.frixuu.scoreboardrevision.services.PlaceholderService;
+import lombok.Getter;
+import lombok.Setter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -14,11 +16,13 @@ import org.bukkit.entity.Player;
 public class ScoreboardHolder {
 
     private final BoardRunnable boardRunnable;
+    private final PlaceholderService placeholderService;
     private final ScoreboardPlugin plugin;
 
     private final Slimboard slim;
     public Player player;
-    private boolean disabled = false;
+    @Getter @Setter
+    private boolean enabled = true;
 
     /**
      * Construct a new holder
@@ -28,6 +32,7 @@ public class ScoreboardHolder {
      */
     public ScoreboardHolder(BoardRunnable boardRunnable, ScoreboardPlugin plugin, PlaceholderService placeholderService, FileConfiguration config, Player player) {
         this.boardRunnable = boardRunnable;
+        this.placeholderService = placeholderService;
         this.player = player;
         this.plugin = plugin;
 
@@ -42,14 +47,17 @@ public class ScoreboardHolder {
     public void update() {
 
         if (Session.disabledPlayers.contains(this.player)) {
-            if (!disabled)
-                this.player.setScoreboard(ScoreboardPlugin.empty);
-            disabled = true;
+            if (isEnabled()) {
+                player.setScoreboard(ScoreboardPlugin.empty);
+                enabled = false;
+            }
             return;
-        } else if (Session.reEnablePlayers.contains(this.player)) {
-            disabled = false;
-            this.player.setScoreboard(this.slim.board);
+        }
+
+        if (Session.reEnablePlayers.contains(this.player)) {
             Session.reEnablePlayers.remove(this.player);
+            player.setScoreboard(this.slim.board);
+            enabled = true;
         }
 
         slim.setTitle(boardRunnable.getTitleRow().getCurrentLine());
@@ -58,10 +66,8 @@ public class ScoreboardHolder {
         for (ScoreboardRow row : boardRunnable.getRows()) {
             String line = row.getCurrentLine();
             if (row.containsPlaceholders) {
-                // Check if the PAPI plugin is enabled and the string has a placeholder
-                if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI") &&
-                    PlaceholderAPI.containsPlaceholders(line)) {
-                    line = PlaceholderAPI.setPlaceholders(player, line);
+                if (placeholderService != null && placeholderService.containsPlaceholders(line)) {
+                    line = placeholderService.setPlaceholders(player, line);
                 }
             }
             slim.setLine(count, line);
