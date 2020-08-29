@@ -6,8 +6,6 @@ import io.github.frixuu.scoreboardrevision.board.slimboard.Slimboard;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-
 /**
  * Created by Rien on 22-10-2018.
  */
@@ -41,15 +39,15 @@ public class ScoreboardHolder {
      */
     public void update() {
 
-        if (Session.disabled_players.contains(this.player)) {
+        if (Session.disabledPlayers.contains(this.player)) {
             if (!disabled)
                 this.player.setScoreboard(ScoreboardPlugin.empty);
             disabled = true;
             return;
-        } else if (Session.re_enable_players.contains(this.player)) {
+        } else if (Session.reEnablePlayers.contains(this.player)) {
             disabled = false;
             this.player.setScoreboard(this.slim.board);
-            Session.re_enable_players.remove(this.player);
+            Session.reEnablePlayers.remove(this.player);
         }
 
         slim.setTitle(boardRunnable.getTitleRow().getCurrentLine());

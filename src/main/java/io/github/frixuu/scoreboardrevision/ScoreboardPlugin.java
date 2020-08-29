@@ -70,7 +70,7 @@ public class ScoreboardPlugin extends JavaPlugin {
         registerCommands();
         loadBoards();
 
-        new WorldManager().runTaskTimer(this, 20L, 40L);
+        new WorldManager(this.getServer(), ConfigControl.get()).runTaskTimer(this, 20L, 40L);
 
         getLogger().info("Hey, we're online! ScoreboardRevision is now running.");
     }
