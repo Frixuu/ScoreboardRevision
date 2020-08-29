@@ -53,8 +53,10 @@ public class BoardRunnable extends BukkitRunnable {
 
         // Register already joined players
         if (isDefault) {
-            server.getOnlinePlayers()
-                .forEach(player -> new ScoreboardHolder(this, plugin, placeholderService, config, player));
+            server.getOnlinePlayers().forEach(player -> {
+                var holder = new ScoreboardHolder(this, plugin, placeholderService, config, player);
+                registerHolder(holder);
+            });
         }
     }
 

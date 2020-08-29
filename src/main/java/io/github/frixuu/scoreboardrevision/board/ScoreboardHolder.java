@@ -6,7 +6,6 @@ import io.github.frixuu.scoreboardrevision.board.slimboard.Slimboard;
 import io.github.frixuu.scoreboardrevision.services.PlaceholderService;
 import lombok.Getter;
 import lombok.Setter;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -17,12 +16,10 @@ public class ScoreboardHolder {
 
     private final BoardRunnable boardRunnable;
     private final PlaceholderService placeholderService;
-    private final ScoreboardPlugin plugin;
 
     private final Slimboard slim;
-    public Player player;
-    @Getter @Setter
-    private boolean enabled = true;
+    @Getter private final Player player;
+    @Getter @Setter private boolean enabled = true;
 
     /**
      * Construct a new holder
@@ -34,11 +31,8 @@ public class ScoreboardHolder {
         this.boardRunnable = boardRunnable;
         this.placeholderService = placeholderService;
         this.player = player;
-        this.plugin = plugin;
 
         slim = new Slimboard(plugin, config, player, placeholderService, boardRunnable.getRows().size());
-
-        boardRunnable.registerHolder(this);
     }
 
     /**
