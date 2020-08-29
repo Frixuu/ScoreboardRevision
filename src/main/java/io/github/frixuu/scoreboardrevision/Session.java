@@ -14,9 +14,6 @@ public class Session {
     public static String[] dependencies = {"PlaceholderAPI"};
     public static ArrayList<String> enabled_dependencies = new ArrayList<>();
 
-    // Objects
-    public static ScoreboardPlugin plugin = null;
-
     // Bools
     public static boolean isuptodate = false;
 

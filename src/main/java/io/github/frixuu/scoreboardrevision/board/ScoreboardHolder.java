@@ -14,6 +14,8 @@ import java.util.HashMap;
 public class ScoreboardHolder {
 
     private final BoardRunnable boardRunnable;
+    private final ScoreboardPlugin plugin;
+
     private final Slimboard slim;
     public Player player;
     private boolean disabled = false;
@@ -24,11 +26,12 @@ public class ScoreboardHolder {
      * @param boardRunnable
      * @param player
      */
-    public ScoreboardHolder(BoardRunnable boardRunnable, Player player) {
+    public ScoreboardHolder(BoardRunnable boardRunnable, ScoreboardPlugin plugin, Player player) {
         this.boardRunnable = boardRunnable;
         this.player = player;
+        this.plugin = plugin;
 
-        slim = new Slimboard(Session.plugin, player, boardRunnable.getRows().size());
+        slim = new Slimboard(plugin, player, boardRunnable.getRows().size());
 
         boardRunnable.registerHolder(this);
     }

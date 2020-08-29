@@ -1,7 +1,7 @@
 package io.github.frixuu.scoreboardrevision.utils;
 
 
-import io.github.frixuu.scoreboardrevision.Session;
+import io.github.frixuu.scoreboardrevision.ScoreboardPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -18,42 +18,46 @@ import java.util.HashMap;
  */
 public class ConfigControl {
 
-    private static ConfigControl instance = null;
-    HashMap<String, FileConfiguration> designations = new HashMap<>();
+    private final ScoreboardPlugin plugin;
 
-    private ConfigControl() {
-        ConfigControl.instance = this;
+    private static ConfigControl instance = null;
+    private final HashMap<String, FileConfiguration> designations = new HashMap<>();
+
+    public ConfigControl(ScoreboardPlugin plugin) {
+        this.plugin = plugin;
         this.createDataFiles();
     }
 
     public static ConfigControl get() {
-        if (instance != null)
-            return instance;
+        assert instance != null;
+        return instance;
+    }
 
-        return new ConfigControl();
+    public static void setInstance(ConfigControl cc) {
+        instance = cc;
     }
 
     public void createDataFiles() {
 
-        if (!Session.plugin.getDataFolder().exists())
-            Session.plugin.getDataFolder().mkdirs();
+        if (!plugin.getDataFolder().exists()) {
+            plugin.getDataFolder().mkdirs();
+        }
 
-
-        createConfigFile("settings");
+        createConfigFile("settings.yml");
     }
 
     public void purge() {
         designations.clear();
     }
 
-    public void createConfigFile(String name) {
-        File f = new File(Session.plugin.getDataFolder(), name + ".yml");
+    public void createConfigFile(String path) {
+        File file = new File(plugin.getDataFolder(), path);
 
         boolean needCopyDefaults = false;
 
         try {
-            if (!f.exists()) {
-                f.createNewFile();
+            if (!file.exists()) {
+                file.createNewFile();
                 needCopyDefaults = true;
             }
         } catch (IOException ex) {
@@ -62,8 +66,8 @@ public class ConfigControl {
 
         if (needCopyDefaults) {
             try {
-                Reader defConfigStream = new InputStreamReader(ConfigControl.class.getResourceAsStream("/" + name + ".yml"), StandardCharsets.UTF_8);
-                PrintWriter writer = new PrintWriter(f, "UTF-8");
+                Reader defConfigStream = new InputStreamReader(ConfigControl.class.getResourceAsStream("/" + path + ".yml"), StandardCharsets.UTF_8);
+                PrintWriter writer = new PrintWriter(file, "UTF-8");
                 writer.print(read(defConfigStream));
                 writer.close();
             } catch (Exception ex) {
@@ -71,8 +75,8 @@ public class ConfigControl {
             }
         }
 
-        FileConfiguration fc = YamlConfiguration.loadConfiguration(f);
-        designations.put(name, fc);
+        FileConfiguration fileConfig = YamlConfiguration.loadConfiguration(file);
+        designations.put(path, fileConfig);
     }
 
 
@@ -85,17 +89,14 @@ public class ConfigControl {
         return designations.get(fc);
     }
 
-    public String read(Reader r)
-        throws IOException {
-        Reader initialReader = r;
+    public String read(Reader reader) throws IOException {
         char[] arr = new char[8 * 1024];
         StringBuilder buffer = new StringBuilder();
         int numCharsRead;
-        while ((numCharsRead = initialReader.read(arr, 0, arr.length)) != -1) {
+        while ((numCharsRead = reader.read(arr, 0, arr.length)) != -1) {
             buffer.append(arr, 0, numCharsRead);
         }
-        initialReader.close();
+        reader.close();
         return buffer.toString();
     }
-
 }

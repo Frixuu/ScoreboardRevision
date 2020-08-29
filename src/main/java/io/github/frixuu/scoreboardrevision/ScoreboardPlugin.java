@@ -3,6 +3,7 @@ package io.github.frixuu.scoreboardrevision;
 import io.github.frixuu.scoreboardrevision.board.BoardRunnable;
 import io.github.frixuu.scoreboardrevision.board.WorldManager;
 import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
+import lombok.var;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,10 +28,10 @@ public class ScoreboardPlugin extends JavaPlugin {
         newApp(getServer(), "board", true); // Default board
 
         for (String s : ConfigControl.get().gc("settings").getStringList("enabled-boards")) {
-            Session.plugin.getLogger().info("Attempting to start app-creator for: " + s);
+            getLogger().info("Attempting to start app-creator for: " + s);
             if (ConfigControl.get().gc("settings").isConfigurationSection(s)) newApp(getServer(), s, false);
             else
-                Session.plugin.getLogger().severe("Tried enabling board '" + s + "', but it does not exist!");
+                getLogger().severe("Tried enabling board '" + s + "', but it does not exist!");
         }
     }
 
@@ -52,25 +53,20 @@ public class ScoreboardPlugin extends JavaPlugin {
     public void newApp(Server server, String board, boolean isdefault) {
         BoardRunnable boardRunnable = new BoardRunnable(board, server, this);
         if (ConfigControl.get().gc("settings").getBoolean("settings.safe-mode"))
-            boardRunnable.runTaskTimer(Session.plugin, 1L, 1L);
-        else boardRunnable.runTaskTimerAsynchronously(Session.plugin, 1L, 1L);
+            boardRunnable.runTaskTimer(this, 1L, 1L);
+        else boardRunnable.runTaskTimerAsynchronously(this, 1L, 1L);
         apps.put(board, boardRunnable);
-        Session.plugin.getLogger().info("Loaded app handler for board: " + board);
+        getLogger().info("Loaded app handler for board: " + board);
         boardRunnable.isdefault = isdefault;
     }
 
     @Override
     public void onEnable() {
-        init();
-    }
-
-    /**
-     * Initiate the plugin
-     */
-    private void init() {
-        Session.plugin = this;
+        ConfigControl.setInstance(new ConfigControl(this));
         ConfigControl.get().createDataFiles();
-        empty = getServer().getScoreboardManager().getNewScoreboard();
+
+        var scoreboardManager = getServer().getScoreboardManager();
+        empty = scoreboardManager.getNewScoreboard();
 
         autoloadDependencies();
         registerCommands();

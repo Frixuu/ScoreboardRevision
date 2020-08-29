@@ -38,7 +38,7 @@ public class BoardRunnable extends BukkitRunnable {
 
         //Events
         var pluginManager = server.getPluginManager();
-        pluginManager.registerEvents(new PlayerJoinListener(this), plugin);
+        pluginManager.registerEvents(new PlayerJoinListener(this, plugin), plugin);
         pluginManager.registerEvents(new PlayerQuitListener(this), plugin);
 
         // Setup title row
@@ -59,7 +59,7 @@ public class BoardRunnable extends BukkitRunnable {
         // Register already joined players
         if (board.equals("board")) {
             server.getOnlinePlayers()
-                .forEach(player -> new ScoreboardHolder(this, player));
+                .forEach(player -> new ScoreboardHolder(this, plugin, player));
         }
     }
 
