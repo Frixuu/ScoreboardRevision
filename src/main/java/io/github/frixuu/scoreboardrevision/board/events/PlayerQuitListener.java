@@ -17,7 +17,6 @@ public class PlayerQuitListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
-        if (boardRunnable == null) return;
         boardRunnable.unregisterHolder(e.getPlayer());
         e.getPlayer().setScoreboard(ScoreboardPlugin.empty);
     }

@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Rien on 21-10-2018.
@@ -18,33 +19,30 @@ import java.util.ArrayList;
 public class BoardRunnable extends BukkitRunnable {
 
     @Getter private final ScoreboardRow titleRow;
-    @Getter private final ArrayList<ScoreboardRow> rows = new ArrayList<>();
-    public ArrayList<ScoreboardHolder> holders = new ArrayList<>();
-    public String board;
-    public boolean isdefault = true;
+    @Getter private final List<ScoreboardRow> rows = new ArrayList<>();
+    @Getter private final List<ScoreboardHolder> holders = new ArrayList<>();
 
-    /**
-     * Construct a new board driver
-     *
-     * @param board
-     */
-    public BoardRunnable(String board, Server server, ScoreboardPlugin plugin) {
+    @Getter private final String boardKey;
+    @Getter private final boolean isDefault;
+
+    public BoardRunnable(String boardKey, Server server, ScoreboardPlugin plugin, boolean isDefault) {
+        this.boardKey = boardKey;
+        this.isDefault = isDefault;
+
         var config = ConfigControl.get().getConfig("settings");
-        this.board = board; // What is the current board?
 
-        //Events
         var pluginManager = server.getPluginManager();
         pluginManager.registerEvents(new PlayerJoinListener(this, plugin, config), plugin);
         pluginManager.registerEvents(new PlayerQuitListener(this), plugin);
 
         // Setup title row
-        var sectionTitle = config.getConfigurationSection(board + ".title");
+        var sectionTitle = config.getConfigurationSection(boardKey + ".title");
         var linesTitle = sectionTitle.getStringList("liner"); // Get the lines
-        var intervalTitle = config.getInt(board + ".title.interval"); // Get the intervals
+        var intervalTitle = config.getInt(boardKey + ".title.interval"); // Get the intervals
         titleRow = new ScoreboardRow(linesTitle, intervalTitle); // Create the title row!
 
         for (int i = 1; i < 200; i++) {
-            var section = config.getConfigurationSection(board + ".rows." + i); // Get their rows
+            var section = config.getConfigurationSection(boardKey + ".rows." + i); // Get their rows
             if (section != null) {
                 var interval = section.getInt("interval");
                 var lines = section.getStringList("liner");
@@ -53,40 +51,25 @@ public class BoardRunnable extends BukkitRunnable {
         }
 
         // Register already joined players
-        if (board.equals("board")) {
+        if (isDefault) {
             server.getOnlinePlayers()
                 .forEach(player -> new ScoreboardHolder(this, plugin, config, player));
         }
     }
 
-    /**
-     * Register a scoreboardholder
-     *
-     * @param holder
-     */
     public void registerHolder(ScoreboardHolder holder) {
         holders.add(holder);
     }
 
-    /**
-     * Unregister a holder
-     *
-     * @param holder
-     */
     public void unregisterHolder(ScoreboardHolder holder) {
         holders.remove(holder);
     }
 
-    /**
-     * Unregister a holder via player
-     *
-     * @param player
-     */
     public void unregisterHolder(Player player) {
         holders.stream()
             .filter(holder -> holder.player == player)
             .findFirst()
-            .ifPresent(holder -> holders.remove(holder));
+            .ifPresent(this::unregisterHolder);
     }
 
     @Override

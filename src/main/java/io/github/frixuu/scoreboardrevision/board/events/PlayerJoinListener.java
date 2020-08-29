@@ -21,7 +21,7 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        if (boardRunnable != null && boardRunnable.isdefault) {
+        if (boardRunnable.isDefault()) {
             new ScoreboardHolder(boardRunnable, plugin, config, e.getPlayer());
         }
     }

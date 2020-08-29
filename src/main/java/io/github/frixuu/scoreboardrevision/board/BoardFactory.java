@@ -13,7 +13,7 @@ public class BoardFactory {
      * Creates and schedules a new board task.
      */
     public BoardRunnable create(String key, boolean isDefault, boolean runAsync) {
-        var boardTask = new BoardRunnable(key, plugin.getServer(), plugin);
+        var boardTask = new BoardRunnable(key, plugin.getServer(), plugin, isDefault);
 
         if (runAsync) {
             boardTask.runTaskTimerAsynchronously(plugin, 1L, 1L);
@@ -21,7 +21,6 @@ public class BoardFactory {
             boardTask.runTaskTimer(plugin, 1L, 1L);
         }
 
-        boardTask.isdefault = isDefault;
         return boardTask;
     }
 }
