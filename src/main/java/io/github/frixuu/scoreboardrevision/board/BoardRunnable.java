@@ -33,7 +33,7 @@ public class BoardRunnable extends BukkitRunnable {
      */
     public BoardRunnable(String board, Server server, ScoreboardPlugin plugin) {
         // conf
-        BoardRunnable.longline = ConfigControl.get().gc("settings").getBoolean("settings.longline"); // Are we in longline?
+        BoardRunnable.longline = ConfigControl.get().getConfig("settings").getBoolean("settings.longline"); // Are we in longline?
         this.board = board; // What is the current board?
 
         //Events
@@ -42,13 +42,13 @@ public class BoardRunnable extends BukkitRunnable {
         pluginManager.registerEvents(new PlayerQuitListener(this), plugin);
 
         // Setup title row
-        List<String> lines = ConfigControl.get().gc("settings").getConfigurationSection(board + ".title").getStringList("liner"); // Get the lines
-        int interval = ConfigControl.get().gc("settings").getInt(board + ".title.interval"); // Get the intervals
+        List<String> lines = ConfigControl.get().getConfig("settings").getConfigurationSection(board + ".title").getStringList("liner"); // Get the lines
+        int interval = ConfigControl.get().getConfig("settings").getInt(board + ".title.interval"); // Get the intervals
         titleRow = new ScoreboardRow((ArrayList<String>) lines, interval); // Create the title row!
 
         for (int i = 1; i < 200; i++) // Loop over all lines
         {
-            ConfigurationSection section = ConfigControl.get().gc("settings").getConfigurationSection(board + ".rows." + i); // Get their rows
+            ConfigurationSection section = ConfigControl.get().getConfig("settings").getConfigurationSection(board + ".rows." + i); // Get their rows
             if (null != section) // Is the section null?
             {
                 ScoreboardRow row = new ScoreboardRow((ArrayList<String>) section.getStringList("liner"), section.getInt("interval")); // Create a new row

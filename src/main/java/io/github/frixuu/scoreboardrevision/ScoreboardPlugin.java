@@ -6,6 +6,7 @@ import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
 import lombok.var;
 import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.HashMap;
@@ -24,22 +25,23 @@ public class ScoreboardPlugin extends JavaPlugin {
      * Load in all board drivers
      */
     public void loadBoards() {
+        var config = ConfigControl.get();
         newApp(getServer(), "board", true); // Default board
-
-        for (String s : ConfigControl.get().gc("settings").getStringList("enabled-boards")) {
-            getLogger().info("Attempting to start app-creator for: " + s);
-            if (ConfigControl.get().gc("settings").isConfigurationSection(s)) newApp(getServer(), s, false);
-            else
-                getLogger().severe("Tried enabling board '" + s + "', but it does not exist!");
-        }
+        config.getConfig("settings").getStringList("enabled-boards").forEach(board -> {
+            getLogger().info("Attempting to start app-creator for: " + board);
+            if (config.getConfig("settings").isConfigurationSection(board)) {
+                newApp(getServer(), board, false);
+            } else {
+                getLogger().severe("Tried enabling board '" + board + "', but it does not exist!");
+            }
+        });
     }
 
     /**
      * Unload all board drivers
      */
     public static void disolveBoards() {
-        for (BoardRunnable boardRunnable : apps.values())
-            boardRunnable.cancel();
+        apps.values().forEach(BukkitRunnable::cancel);
         apps.clear();
     }
 
@@ -50,10 +52,13 @@ public class ScoreboardPlugin extends JavaPlugin {
      * @param isdefault
      */
     public void newApp(Server server, String board, boolean isdefault) {
-        BoardRunnable boardRunnable = new BoardRunnable(board, server, this);
-        if (ConfigControl.get().gc("settings").getBoolean("settings.safe-mode"))
+        var boardRunnable = new BoardRunnable(board, server, this);
+        var safeMode = ConfigControl.get().getConfig("settings").getBoolean("settings.safe-mode", true);
+        if (safeMode) {
             boardRunnable.runTaskTimer(this, 1L, 1L);
-        else boardRunnable.runTaskTimerAsynchronously(this, 1L, 1L);
+        } else {
+            boardRunnable.runTaskTimerAsynchronously(this, 1L, 1L);
+        }
         apps.put(board, boardRunnable);
         getLogger().info("Loaded app handler for board: " + board);
         boardRunnable.isdefault = isdefault;
@@ -61,8 +66,9 @@ public class ScoreboardPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        ConfigControl.setInstance(new ConfigControl(this));
-        ConfigControl.get().createDataFiles();
+        var config = new ConfigControl(this);
+        ConfigControl.setInstance(config);
+        config.createDataFiles();
 
         var scoreboardManager = getServer().getScoreboardManager();
         empty = scoreboardManager.getNewScoreboard();
@@ -70,7 +76,7 @@ public class ScoreboardPlugin extends JavaPlugin {
         registerCommands();
         loadBoards();
 
-        new WorldManager(this.getServer(), ConfigControl.get()).runTaskTimer(this, 20L, 40L);
+        new WorldManager(this.getServer(), config).runTaskTimer(this, 20L, 40L);
 
         getLogger().info("Hey, we're online! ScoreboardRevision is now running.");
     }

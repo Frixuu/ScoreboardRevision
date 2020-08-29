@@ -2,16 +2,18 @@ package io.github.frixuu.scoreboardrevision.utils;
 
 
 import io.github.frixuu.scoreboardrevision.ScoreboardPlugin;
+import lombok.Setter;
+import lombok.var;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+
+import static io.github.frixuu.scoreboardrevision.utils.ResourceUtils.getResourceAsReader;
 
 /**
  * Created by Rien on 21-10-2018.
@@ -20,7 +22,7 @@ public class ConfigControl {
 
     private final ScoreboardPlugin plugin;
 
-    private static ConfigControl instance = null;
+    @Setter private static ConfigControl instance = null;
     private final HashMap<String, FileConfiguration> designations = new HashMap<>();
 
     public ConfigControl(ScoreboardPlugin plugin) {
@@ -31,10 +33,6 @@ public class ConfigControl {
     public static ConfigControl get() {
         assert instance != null;
         return instance;
-    }
-
-    public static void setInstance(ConfigControl cc) {
-        instance = cc;
     }
 
     public void createDataFiles() {
@@ -50,7 +48,8 @@ public class ConfigControl {
         designations.clear();
     }
 
-    public void createConfigFile(String path) {
+    public void createConfigFile(String name) {
+        var path = name + ".yml";
         File file = new File(plugin.getDataFolder(), path);
 
         boolean needCopyDefaults = false;
@@ -65,18 +64,16 @@ public class ConfigControl {
         }
 
         if (needCopyDefaults) {
-            try {
-                Reader defConfigStream = new InputStreamReader(ConfigControl.class.getResourceAsStream("/" + path + ".yml"), StandardCharsets.UTF_8);
-                PrintWriter writer = new PrintWriter(file, "UTF-8");
+            try (PrintWriter writer = new PrintWriter(file, "UTF-8")) {
+                Reader defConfigStream = getResourceAsReader(path);
                 writer.print(read(defConfigStream));
-                writer.close();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
 
         FileConfiguration fileConfig = YamlConfiguration.loadConfiguration(file);
-        designations.put(path, fileConfig);
+        designations.put(name, fileConfig);
     }
 
 
@@ -85,7 +82,7 @@ public class ConfigControl {
         this.createDataFiles();
     }
 
-    public FileConfiguration gc(String fc) {
+    public FileConfiguration getConfig(String fc) {
         return designations.get(fc);
     }
 

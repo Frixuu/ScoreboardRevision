@@ -15,7 +15,7 @@ public class WorldManager extends BukkitRunnable {
 
     public WorldManager(Server server, ConfigControl config) {
         this.server = server;
-        disabledWorlds = config.gc("settings").getStringList("disabled-worlds")
+        disabledWorlds = config.getConfig("settings").getStringList("disabled-worlds")
             .stream()
             .map(world -> world.toLowerCase().trim())
             .collect(Collectors.toList());
