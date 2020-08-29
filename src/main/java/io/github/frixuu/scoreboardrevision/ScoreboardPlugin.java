@@ -4,6 +4,7 @@ import io.github.frixuu.scoreboardrevision.board.BoardRunnable;
 import io.github.frixuu.scoreboardrevision.board.WorldManager;
 import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -22,12 +23,12 @@ public class ScoreboardPlugin extends JavaPlugin {
     /**
      * Load in all board drivers
      */
-    public static void loadBoards() {
-        newApp("board", true); // Default board
+    public void loadBoards() {
+        newApp(getServer(), "board", true); // Default board
 
         for (String s : ConfigControl.get().gc("settings").getStringList("enabled-boards")) {
             Session.plugin.getLogger().info("Attempting to start app-creator for: " + s);
-            if (ConfigControl.get().gc("settings").isConfigurationSection(s)) newApp(s, false);
+            if (ConfigControl.get().gc("settings").isConfigurationSection(s)) newApp(getServer(), s, false);
             else
                 Session.plugin.getLogger().severe("Tried enabling board '" + s + "', but it does not exist!");
         }
@@ -48,8 +49,8 @@ public class ScoreboardPlugin extends JavaPlugin {
      * @param board
      * @param isdefault
      */
-    public static void newApp(String board, boolean isdefault) {
-        BoardRunnable boardRunnable = new BoardRunnable(board);
+    public void newApp(Server server, String board, boolean isdefault) {
+        BoardRunnable boardRunnable = new BoardRunnable(board, server, this);
         if (ConfigControl.get().gc("settings").getBoolean("settings.safe-mode"))
             boardRunnable.runTaskTimer(Session.plugin, 1L, 1L);
         else boardRunnable.runTaskTimerAsynchronously(Session.plugin, 1L, 1L);
@@ -93,7 +94,7 @@ public class ScoreboardPlugin extends JavaPlugin {
      * Create the commands
      */
     private void registerCommands() {
-        Objects.requireNonNull(getCommand("sb")).setExecutor(new CommandManager());
+        Objects.requireNonNull(getCommand("sb")).setExecutor(new CommandManager(this));
     }
 
 }

@@ -49,10 +49,9 @@ public class ScoreboardHolder {
             Session.re_enable_players.remove(this.player);
         }
 
-        slim.setTitle(boardRunnable.getTitle().getCurrentLine());
+        slim.setTitle(boardRunnable.getTitleRow().getCurrentLine());
 
         int count = 0;
-        HashMap<Integer, String> lines = new HashMap<>();
         for (ScoreboardRow row : boardRunnable.getRows()) {
             String line = row.getCurrentLine();
             if (row.containsPlaceholders) {
@@ -66,5 +65,4 @@ public class ScoreboardHolder {
             count++;
         }
     }
-
 }

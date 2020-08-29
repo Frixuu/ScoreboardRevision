@@ -2,6 +2,7 @@ package io.github.frixuu.scoreboardrevision;
 
 import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
 import io.github.frixuu.scoreboardrevision.utils.ChatUtils;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,7 +13,11 @@ import static io.github.frixuu.scoreboardrevision.utils.ChatUtils.sendShortPrefi
 /**
  * Created by Rien on 23-10-2018.
  */
+@RequiredArgsConstructor
 public class CommandManager implements CommandExecutor {
+
+    private final ScoreboardPlugin plugin;
+
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
 
@@ -28,9 +33,9 @@ public class CommandManager implements CommandExecutor {
             } else {
                 if (args[0].equalsIgnoreCase("reload")) {
                     if (player.hasPermission("scoreboard.reload")) {
-                        ScoreboardPlugin.disolveBoards();
+                        plugin.disolveBoards();
                         ConfigControl.get().reloadConfigs();
-                        ScoreboardPlugin.loadBoards();
+                        plugin.loadBoards();
                         sendShortPrefixedMessage(player, "Scoreboard reloaded");
                     } else {
                         sendShortPrefixedMessage(player, "You lack the permission &cscoreboard.reload");

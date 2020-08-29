@@ -1,9 +1,12 @@
 package io.github.frixuu.scoreboardrevision.board;
 
-import io.github.frixuu.scoreboardrevision.Session;
-import io.github.frixuu.scoreboardrevision.board.events.EDeintergrate;
-import io.github.frixuu.scoreboardrevision.board.events.EIntergrate;
+import io.github.frixuu.scoreboardrevision.ScoreboardPlugin;
+import io.github.frixuu.scoreboardrevision.board.events.PlayerQuitListener;
+import io.github.frixuu.scoreboardrevision.board.events.PlayerJoinListener;
 import io.github.frixuu.scoreboardrevision.utils.ConfigControl;
+import lombok.Getter;
+import lombok.var;
+import org.bukkit.Server;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -17,9 +20,8 @@ import java.util.List;
 public class BoardRunnable extends BukkitRunnable {
 
     public static boolean longline = false;
-    private final ScoreboardRow title;
-    private final ArrayList<ScoreboardRow> rows = new ArrayList<>();
-    private final ArrayList<Player> children = new ArrayList<>();
+    @Getter private final ScoreboardRow titleRow;
+    @Getter private final ArrayList<ScoreboardRow> rows = new ArrayList<>();
     public ArrayList<ScoreboardHolder> holders = new ArrayList<>();
     public String board;
     public boolean isdefault = true;
@@ -29,19 +31,20 @@ public class BoardRunnable extends BukkitRunnable {
      *
      * @param board
      */
-    public BoardRunnable(String board) {
+    public BoardRunnable(String board, Server server, ScoreboardPlugin plugin) {
         // conf
         BoardRunnable.longline = ConfigControl.get().gc("settings").getBoolean("settings.longline"); // Are we in longline?
         this.board = board; // What is the current board?
 
         //Events
-        Session.plugin.getServer().getPluginManager().registerEvents(new EIntergrate(this), Session.plugin); // Join event
-        Session.plugin.getServer().getPluginManager().registerEvents(new EDeintergrate(this), Session.plugin); // Quit event
+        var pluginManager = server.getPluginManager();
+        pluginManager.registerEvents(new PlayerJoinListener(this), plugin);
+        pluginManager.registerEvents(new PlayerQuitListener(this), plugin);
 
         // Setup title row
         List<String> lines = ConfigControl.get().gc("settings").getConfigurationSection(board + ".title").getStringList("liner"); // Get the lines
         int interval = ConfigControl.get().gc("settings").getInt(board + ".title.interval"); // Get the intervals
-        title = new ScoreboardRow((ArrayList<String>) lines, interval); // Create the title row!
+        titleRow = new ScoreboardRow((ArrayList<String>) lines, interval); // Create the title row!
 
         for (int i = 1; i < 200; i++) // Loop over all lines
         {
@@ -54,28 +57,10 @@ public class BoardRunnable extends BukkitRunnable {
         }
 
         // Register already joined players
-        if (board.equals("board"))
-            for (Player player : Session.plugin.getServer().getOnlinePlayers())
-                new ScoreboardHolder(this, player);
-
-    }
-
-    /**
-     * Get all the rows
-     *
-     * @return
-     */
-    public ArrayList<ScoreboardRow> getRows() {
-        return rows;
-    }
-
-    /**
-     * Ge the title
-     *
-     * @return
-     */
-    public ScoreboardRow getTitle() {
-        return title;
+        if (board.equals("board")) {
+            server.getOnlinePlayers()
+                .forEach(player -> new ScoreboardHolder(this, player));
+        }
     }
 
     /**
@@ -111,14 +96,8 @@ public class BoardRunnable extends BukkitRunnable {
 
     @Override
     public void run() {
-        // Update rows
-        title.update();
-        for (ScoreboardRow row : rows)
-            row.update();
-
-
-        // Update scoreboards
-        for (ScoreboardHolder holder : holders)
-            holder.update();
+        titleRow.update();
+        rows.forEach(ScoreboardRow::update);
+        holders.forEach(ScoreboardHolder::update);
     }
 }
