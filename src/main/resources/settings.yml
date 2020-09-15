@@ -9,14 +9,14 @@
 # v: 1.4.2 RELEASE
 
 settings:
-  # Safe-mode determines if scoreboard is synchronized with the server (true) or asynchronized (false)
-  # Synchronized (safe-mode: true) is more stable and robust
-  # Asynchronized (safe-mode: false) is more faster but can cause strange problems in some cases
+  # Safe-mode determines if scoreboard is synchronized with the server (true) or asynchronous (false)
+  # Synchronous (safe-mode: true) is more stable and robust
+  # Asynchronous (safe-mode: false) is more faster but can cause strange problems in some cases
   safe-mode: false
   # If the server version is 1.13 or higher, enable longline.
   # true: you can use 128 characters per line (1.13 and up)
   # false: you can use 32 characters per line (1.12 and down)
-  longline: false
+  longline: true
 
 # In what worlds should we disable scoreboard?
 disabled-worlds:

@@ -38,3 +38,9 @@ dependencies {
     testCompileOnly("org.projectlombok:lombok:$lombokVersion")
     testAnnotationProcessor("org.projectlombok:lombok:$lombokVersion")
 }
+
+tasks {
+    compileJava {
+        options.encoding = "UTF-8"
+    }
+}

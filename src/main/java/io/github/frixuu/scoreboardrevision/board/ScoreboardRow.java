@@ -31,9 +31,7 @@ public class ScoreboardRow {
         }
 
         this.interval = interval;
-        this.lines = lines.stream()
-            .map(line -> line.endsWith("Â ") ? line.substring(0, line.length() - 2) : line)
-            .collect(Collectors.toList());
+        this.lines = lines;
 
         isStatic = lines.size() == 1;
         containsPlaceholders = lines.stream().anyMatch(line -> line.contains("%"));
